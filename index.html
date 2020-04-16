@@ -170,6 +170,89 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-python3-类中字典类型的实例变量被“篡改”" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/17/python3-%E7%B1%BB%E4%B8%AD%E5%AD%97%E5%85%B8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F%E8%A2%AB%E2%80%9C%E7%AF%A1%E6%94%B9%E2%80%9D/">python3 类中字典类型的实例变量被“篡改”</a>
+    </h1>
+  
+
+        
+        
+<a href="/2020/04/17/python3-%E7%B1%BB%E4%B8%AD%E5%AD%97%E5%85%B8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F%E8%A2%AB%E2%80%9C%E7%AF%A1%E6%94%B9%E2%80%9D/" class="archive-article-date">
+  	<time datetime="2020-04-16T16:08:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-17</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>先看下面的例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span><span class="params">(object)</span>:</span></span><br><span class="line">    va = <span class="string">""</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">(self,str)</span>:</span></span><br><span class="line">        self.va = str</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">defPrint</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(self.va)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Script starts from here</span></span><br><span class="line">a1 = A()</span><br><span class="line">a2 = A()</span><br><span class="line">a3 = A()</span><br><span class="line"></span><br><span class="line">a1.foo(<span class="string">"hhh"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line">a2.foo(<span class="string">"ggg"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line">a3.foo(<span class="string">"123"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line"></span><br><span class="line">运行结果如我们所想</span><br><span class="line">hhh</span><br><span class="line">hhh</span><br><span class="line">hhh</span><br><span class="line">hhh</span><br><span class="line">hhh</span><br><span class="line">hhh</span><br></pre></td></tr></table></figure>
+
+<p>那么如果类内的变量为字典类型呢</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span><span class="params">(object)</span>:</span></span><br><span class="line">    va = &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">(self,str)</span>:</span></span><br><span class="line">        self.va = &#123;<span class="string">"name"</span>:str&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">defPrint</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(self.va)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Script starts from here</span></span><br><span class="line">a1 = A()</span><br><span class="line">a2 = A()</span><br><span class="line">a3 = A()</span><br><span class="line"></span><br><span class="line">a1.foo(<span class="string">"hhh"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line">a2.foo(<span class="string">"ggg"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line">a3.foo(<span class="string">"123"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line"></span><br><span class="line">也没有问题</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'hhh'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'hhh'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'hhh'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'hhh'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'hhh'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'hhh'</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果改变字典的赋值方式呢，这时候最奇葩的地方来了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span><span class="params">(object)</span>:</span></span><br><span class="line">    va = &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">(self,str)</span>:</span></span><br><span class="line">        self.va[<span class="string">"name"</span>] = str   <span class="comment">#注意这里的修改</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">defPrint</span><span class="params">(self)</span>:</span></span><br><span class="line">        print(self.va)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Script starts from here</span></span><br><span class="line">a1 = A()</span><br><span class="line">a2 = A()</span><br><span class="line">a3 = A()</span><br><span class="line"></span><br><span class="line">a1.foo(<span class="string">"hhh"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line">a2.foo(<span class="string">"ggg"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line">a3.foo(<span class="string">"123"</span>)</span><br><span class="line">print(a1.va)</span><br><span class="line">a1.defPrint()</span><br><span class="line"></span><br><span class="line">运行结果很神奇的变成了</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'hhh'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'hhh'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'ggg'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'ggg'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'123'</span>&#125;</span><br><span class="line">&#123;<span class="string">'name'</span>: <span class="string">'123'</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到此时的va已经变成了类变量而不是实例变量。因此会得到该结果。<br>仅作编程中遇到的问题的小记录，至于导致该结果的原因小弟还不是很清楚，还需要进一步学习。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">PYTHON</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/04/17/python3-%E7%B1%BB%E4%B8%AD%E5%AD%97%E5%85%B8%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F%E8%A2%AB%E2%80%9C%E7%AF%A1%E6%94%B9%E2%80%9D/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-basic-usage-of-hexo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -437,6 +520,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">hexo learning notes</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">PYTHON</a>
               </li>
             
             <div class="clearfix"></div>
