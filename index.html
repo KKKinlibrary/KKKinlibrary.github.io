@@ -170,6 +170,234 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-you-don-t-konw-JS-volumn-one-learning-note" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/04/25/you-don-t-konw-JS-volumn-one-learning-note/">you don&#39;t konw JS(volumn one) learning note</a>
+    </h1>
+  
+
+        
+        
+<a href="/2020/04/25/you-don-t-konw-JS-volumn-one-learning-note/" class="archive-article-date">
+  	<time datetime="2020-04-24T16:27:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-04-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="this全面解析"><a href="#this全面解析" class="headerlink" title="this全面解析"></a>this全面解析</h2><ul>
+<li>this的四大绑定规则：<ul>
+<li>默认绑定：对于不使用任何修饰的函数引用进行调用的函数只能使用默认绑定，this会指向全局对象（非strict模式下）</li>
+<li>隐式绑定：将函数添加到对象obj中（严格来说该函数不属于obj对象） 但当函数引用有上下文对象时，隐式绑定规则会把函数调用中的this绑定到这个上下文对象<ul>
+<li>隐式丢失：对隐式绑定获得的函数进行赋值时会导致this应用<strong>默认绑定</strong></li>
+</ul>
+</li>
+<li>显式绑定:call  apply  bind</li>
+<li>new： 在JS中，“构造函数”只是被new调用的普通函数而已<ul>
+<li>使用new来调用函数时会自动执行下面的操作：<ol>
+<li>创建一个全新的对象</li>
+<li>这个对象会被执行[[Prototype]]连接</li>
+<li>这个新对象会绑定到函数调用的this</li>
+<li>如果函数没有其他返回的对象，那么new表达式的函数调用会自动返回这个新对象</li>
+</ol>
+</li>
+<li>其中对于第三步，调用该“构造函数”时，构造函数中的this会应用隐式绑定，此时构造函数中的诸如this.a = a的表达式相当于为obj对象创建了变量a</li>
+</ul>
+</li>
+<li>四种绑定的优先级：（通常情况下）<ul>
+<li>new &gt; 显示绑定 &gt; 隐式绑定（如果函数是在上下文对象调用）&gt; 默认绑定  </li>
+<li>对于call bind apply，传入的第一个参数为null/undefined时实际应用的时默认绑定规则</li>
+<li>object.create(null)、{}都能创建空对象，但是object.create(null)创建得到的对象更空，他没有prototype这个委托</li>
+<li>在构造函数调用中使用bing实际上相当于直接调用目标函数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>箭头函数</strong><ul>
+<li>箭头函数不适用this的四种标准规则，而是根据外层（函数或全局）作用域来决定this</li>
+<li>箭头函数的绑定无法被修改（new也不行）</li>
+<li>箭头函数的特性使其可以像bind一样确保函数的this被绑定到指定的对象</li>
+</ul>
+</li>
+</ul>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h4 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h4><pre><code>- 执行typeof null时会返回字符串&quot;object&quot; 因为不同的对象在底层都表示为二进制，在JS中二进制前三位都0的话会被判断为object类型，null的二进制表示时全0，所以执行typeof时会返回&quot;object&quot;
+- JS的内置对象，如String, Number, Boolean, Object, Function, Array, Date, RegExp, Error他们实际上只是一些内置函数，可以当作构造函数使用来构造一个对应子类型的对象。
+- 对字面变量如let str=&quot;sssstr&quot;我们访问str.length时引擎会自动把字面量转换成String对象，因此可以访问属性和方法。</code></pre><h2 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h2><pre><code>- 数组也是对象，但数组和普通对象都根据其对应的行为和用途进行了优化，所以最好只用对象来存储键/值对，置永数组来存储数值下标/值对
+- ES6定义了Object.assign(..)方法来实现浅复制
+- 在对象中属性名永远都是字符串，如果使用string（字面量）以外的其他值作为属性名那他首先会被转为字符串（数字也不例外）</code></pre><ul>
+<li>创建普通属性时属性描述符会使用默认值：writable:true,  enumerable:true,  configurable:true<ul>
+<li>把configurable修改成false是单向操作，无法撤销！</li>
+<li>例外：即使属性是configurable:false,我们还是可以把writable的状态由true改为false，但是无法由false改为true</li>
+</ul>
+</li>
+<li>不变性：所有方法创造的都是浅不变性，它<strong>只影响</strong>目标对象和他的直接属性，若目标对象引用了其他对象（<strong>数组、对象、函数等</strong>）其他对象的内容不受影响，仍然可变。<ul>
+<li>可以使用Object.preventExtensions() 来禁止一个对象添加新属性并保留已有属性</li>
+<li>Object.seal()会创建一个“密封”的对象  该方法会在一个现有对象上调用Object.preventExtensions()并把所有现有属性标记为configurable:false。  因此蜜蜂之后不能添加新属性、不能重新配置或者删除任何现有属性，但是可以修改属性的值。</li>
+<li>Object.freeze():在seal的基础上增加writable：false</li>
+</ul>
+</li>
+<li>上述方法均不能解决引用对象可变的问题，可行的办法是遍历引用对象的所有属性并调用Object.freeze()方法</li>
+</ul>
+<h3 id="setter和getter"><a href="#setter和getter" class="headerlink" title="setter和getter"></a>setter和getter</h3><ul>
+<li>ES5中可以使用getter和setter部分改写默认操作，但是只能应用在单个属性上，无法应用在整个对象上。</li>
+<li>给一个属性定义getter、setter时该属性会被定义为“访问描述符”，JS会忽略他们的<strong>value</strong>和writable特性，取而代之的时惯性set get 和configurable enumerable特性。对于该属性的访问会自动调用一个隐藏函数“get”，其返回值会被当作属性访问的返回值</li>
+<li>判断属性在对象中是否存在可用<ul>
+<li>in操作符：会检查属性是否在对象一级prototype原型链中（检查的是属性名 <code>4 in [2, 4, 6] //false</code> 因为数组中只有0 1 2三个属性）<ul>
+<li>对于configurable:false 的属性仍可用in操作符判断是否存在，但是不会出现在for..in循环中</li>
+</ul>
+</li>
+<li>hasOwnProperty：只检查属性是否在对象中，不会检查prototype原型链</li>
+</ul>
+</li>
+<li>propertyIsEnumerable(..)会检查给定的属性明是否直接存在于对象中并且满足enumerable:true </li>
+<li>Object.keys(..)会返回一个数组，包含所有可枚举属性（不查原型链）</li>
+<li>Object.getOwnPropertyNames(..)会返回一个数组，包含所有属性无论他们是否可枚举（不查原型链）</li>
+</ul>
+<h3 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h3><ul>
+<li>使用for..in遍历对象属性时顺序时不确定的</li>
+<li>for..of是ES6定义的遍历数组的循环语法    <ul>
+<li>数组内置@@iterator，因此for..of可以直接应用在数组上，@@iterator本身并不是一个迭代器对象，而是一个返回迭代器对象的<strong>函数</strong></li>
+<li>普通对象由于没有内置的@@iterator，无法自动完成for..of遍历</li>
+</ul>
+</li>
+</ul>
+<h2 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h2><ul>
+<li>属性设置和屏蔽：当我们为obj对象添加foo属性时：<ol>
+<li>如果Prototype链上层存在名为foo的普通数据访问属性并且没有被标记为只读(writable:false)，则会在obj中添加一个名为foo的新属性，它是屏蔽属性</li>
+<li>如果Prototype链上层存在foo且被标记为只读(writable:false)，此时无法修改已有属性也不能在obj上创建屏蔽属性。严格模式下会代码抛出错误，普通模式下赋值语句会被忽略。</li>
+<li>如果Prototype链上存在foo并且他是一个setter，那就一定会调用setter。foo不会被添加也不会重新定义foo</li>
+<li>对第二第三种情况，可以使用Object.defineProperty来向myobject添加foo</li>
+<li>使用++操作符时要小心隐式屏蔽的产生，因为obj.a++操作等价于obj.a = obj.a+1, 此时会新建屏蔽元素a</li>
+</ol>
+</li>
+</ul>
+<h4 id="“类”"><a href="#“类”" class="headerlink" title="“类”"></a>“类”</h4><ul>
+<li>JavaScript中本身没有构造函数的概念，但是new会劫持所有普通函数并用构造对象的形式来调用它。对构造函数最准确的描述时：所有带new的函数调用</li>
+<li>常见的误解： <code>a.constructor === Foo // true</code> 因为<code>.constructor</code>会被委托到Foo.prototype上，而<code>Foo.prototype.constructor === Foo</code></li>
+</ul>
+<h4 id="原型继承"><a href="#原型继承" class="headerlink" title="原型继承"></a>原型继承</h4><ul>
+<li>可以使用<code>Son.prototype=Object.create(Par.prototype)</code>，该方法唯一的缺点是需要创建一个新对象然后把就对象抛弃掉。</li>
+<li>ES6添加了辅助函数<code>Object.setPrototypeOf(Son, Par)</code>来把<code>Son.prototype</code>关联到<code>Par.prototype</code><h5 id="instanceof与isPrototypeOf"><a href="#instanceof与isPrototypeOf" class="headerlink" title="instanceof与isPrototypeOf"></a>instanceof与isPrototypeOf</h5></li>
+<li>instanceof原理：<code>a instanceof Foo</code>回答的是：在a的整条[[Prototype]]链中是否有指向Foo.prototype的对象</li>
+<li>局限性：只能处理对象（a）和函数之间的关系，无法判断两个对象之间的联系</li>
+<li>使用内置的bind(..)函数生成的硬绑定函数是没有.prototype属性的，在这样的函数上使用instanceof的话目标函数的.prototype会代替硬绑定函数的.prototype</li>
+<li>isPrototypeOf原理：直接使用a和b之间的对象引用来判断他们的关系<pre><code>let a={};  
+let b=Object.create(a);  
+b.isPrototypeOf(a)// true</code></pre></li>
+<li><code>__proto__</code>:本质上是一个getter/setter，访问a.<strong>proto</strong>时实际上是调用了a.<strong>proto</strong>()（调用getter函数）</li>
+</ul>
+<h4 id="对象关联"><a href="#对象关联" class="headerlink" title="对象关联"></a>对象关联</h4><ul>
+<li><code>Object.create(foo)</code>会创建一个新对象(bar)并把它关联到指定的对象foo，跟new相比最大的区别是new是通过生成.prototype和.constructor引用来创建两个对象的关系，而create仅仅是通过委托来关联对象</li>
+<li><code>Object.create(null)</code>会创建一个拥有空[[prototype]]链接的对象，这个对象<strong>没有原型链</strong>，因此instanceof总是返回false，这种特殊的空[[prototype]]对象通常被称为“字典”。他们完全不受原型链的干扰，因此非常适合用来存储数据。</li>
+</ul>
+<h2 id="行为委托"><a href="#行为委托" class="headerlink" title="行为委托"></a>行为委托</h2><ul>
+<li><strong>行为委托认为对象之间是兄弟关系，互相委托，而不是父类和子类的关系。JavaScript的[[prototype]]机制本质上就是行为委托机制</strong><h4 id="面向委托的设计"><a href="#面向委托的设计" class="headerlink" title="面向委托的设计"></a>面向委托的设计</h4></li>
+<li>在[[prototype]]委托中最好把状态保存在委托者而非委托目标上</li>
+<li>当对象中不存在方法名（setID）时，会通过[[prototype]]委托关联继续寻找，当找到目标方法时，会因为调用位置的关系触发<strong>this的隐式绑定规则</strong>，虽然setID(..)方法在委托目标中，运行时this仍然会绑定到委托者上</li>
+<li>在APT接口的设计中，委托最好在内部实现，不要直接暴露出去</li>
+<li>互相委托是被禁止的  因为如果引用了一个两边都不存在的属性或者方法那就会在[[prototype]]链上产生一个无限递归的循环。正常情况下互相委托是可以正常工作的，但是引擎考虑到在设置时检查并禁止一个无限循环引用效率更高，否则每次从对象中查找属性时都需要进行检查</li>
+</ul>
+<h4 id="简洁方法"><a href="#简洁方法" class="headerlink" title="简洁方法"></a>简洁方法</h4><pre><code>var Foo = {
+    bar(){...}
+    baz: function baz() {...}
+}</code></pre><ul>
+<li>示例中bar便是ES6的简洁方法</li>
+<li>匿名函数三大主要缺点：匿名函数没有name标识符，这会导致：<ul>
+<li>调用栈更难追踪</li>
+<li>自我引用（递归、事件（解除）绑定，等等）更难（<strong>也是简洁方法的主要缺点</strong>）</li>
+<li>代码更难理解</li>
+</ul>
+</li>
+</ul>
+<h2 id="ES6中的class"><a href="#ES6中的class" class="headerlink" title="ES6中的class"></a>ES6中的class</h2><ul>
+<li><p>好处：</p>
+<ul>
+<li>基本上不再引用杂乱的prototype</li>
+<li>继承的存在使得不再需要通过Object.create(..)来替换.prototype对象</li>
+<li>可以通过super(..)来实现相对多态，这样任何方法都可以引用原型链上层的额同名方法</li>
+<li>class字面语法不能声明属性（只能声明方法），这是一种限制，也是一种保护</li>
+<li>可以通过extends拓展对象（子）类型，比如Array、RegExp等等</li>
+</ul>
+</li>
+<li><p>陷阱</p>
+<ul>
+<li>class本质上还是基于[[prototype]]的语法糖</li>
+<li>class并不会向传统面向类的语言一样在声明时静态复制所有行为。父“类”的一个方法被修改或替换后子“类”和所有实例都会受到影响，他们在定义时并没有进行复制，只是使用基于[[prototype]]的实时委托</li>
+<li>出于性能考虑，super并不是动态绑定的，他会在声明时“静态”绑定</li>
+<li>唯一可行的修改supre的prototype的方法：<pre><code>var base = {
+foo: function() {
+    console.log(&quot;xiaohua&quot;);
+}
+}; // as below
+var obj = Object.setPrototypeOf({
+foo() { // needs to use method definition syntax
+       super.foo();
+}
+}, base);
+obj.foo();</code></pre></li>
+<li>JavaScript最强大的特性之一是动态性，任何对象的定义都可以修改（除非把它设置成不可变）</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">JAVASCRIPT</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/04/25/you-don-t-konw-JS-volumn-one-learning-note/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-python3-类中字典类型的实例变量被“篡改”" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -515,6 +743,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">PYTHON</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">JAVASCRIPT</a>
               </li>
             
             <div class="clearfix"></div>
